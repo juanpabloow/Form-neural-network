@@ -4,7 +4,7 @@ A React TypeScript application for handwritten digit recognition using a neural 
 
 ## Features
 
-- **Image Upload**: Upload 28x28 pixel images of handwritten digits
+- **Image Upload**: Upload 28x28 pixel images of handwritten digits (Resize img: https://www.resizepixel.com/)
 - **Invert Option**: Checkbox to invert colors for images with black backgrounds
 - **Real-time Prediction**: Get instant predictions with accuracy and processing time
 - **History Tracking**: View all previous predictions with timestamps
