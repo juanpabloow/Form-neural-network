@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { PredictionService } from '../services/predictionService';
 import { LocalStorageService } from '../utils/localStorage';
 import { PredictionResponse } from '../types';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import Alert from '../components/Alert';
 
 const HomePage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [invertImage, setInvertImage] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [result, setResult] = useState<PredictionResponse | null>(null);
   const [error, setError] = useState<string>('');
 
@@ -36,7 +38,7 @@ const HomePage: React.FC = () => {
     event.preventDefault();
 
     if (!selectedFile) {
-      setError('Please select an image file');
+      setError('Please select an image');
       return;
     }
 
@@ -51,7 +53,6 @@ const HomePage: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
     setError('');
     setResult(null);
 
@@ -62,7 +63,6 @@ const HomePage: React.FC = () => {
       });
 
       setResult(response);
-
       LocalStorageService.addPrediction({
         prediction: response.prediction,
         accuracy: response.accuracy,
@@ -70,97 +70,86 @@ const HomePage: React.FC = () => {
       });
 
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unexpected error occurred');
-      }
-    } finally {
-      setIsLoading(false);
+      setError('Error making prediction. Please try again.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Digit Recognition</h1>
-          <p className="mt-2 text-gray-600">Upload a 28x28 pixel image of a handwritten digit</p>
-        </div>
+    <Card>
+      <div className="text-center mb-6">
+        <h1 className="text-2xl font-bold">Final Project</h1>
+        <p className="text-gray-600 mt-2">Upload a 28x28 pixel image of a handwritten digit</p>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="image-upload" className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium mb-2">
               Select Image (28x28px)
             </label>
             <input
-              id="image-upload"
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              className="w-full text-sm border rounded p-2"
               required
             />
           </div>
 
           <div className="flex items-center">
             <input
-              id="invert-checkbox"
               type="checkbox"
               checked={invertImage}
               onChange={(e) => setInvertImage(e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="mr-2"
             />
-            <label htmlFor="invert-checkbox" className="ml-2 block text-sm text-gray-900">
+            <label className="text-sm">
               Image has black background (invert colors)
             </label>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
+            <Alert variant="error">
               {error}
-            </div>
+            </Alert>
           )}
 
-          <button
+          <Button
             type="submit"
-            disabled={isLoading || !selectedFile}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            disabled={!selectedFile}
+            className="w-full"
           >
-            {isLoading ? 'Processing...' : 'Predict Digit'}
-          </button>
+            Predict Digit
+          </Button>
         </form>
 
         {result && (
-          <div className="mt-8 bg-green-50 border border-green-200 rounded-md p-4">
-            <h3 className="text-lg font-semibold text-green-800 mb-3">Prediction Result</h3>
-            <div className="space-y-2 text-sm">
+          <Alert variant="success" className="mt-6">
+            <h3 className="font-semibold mb-3">Prediction Result</h3>
+            <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="font-medium">Predicted Digit:</span>
-                <span className="text-2xl font-bold text-green-600">{result.prediction}</span>
+                <span>Predicted Digit:</span>
+                <span className="text-xl font-bold text-green-600">{result.prediction}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-medium">Accuracy:</span>
+                <span>Accuracy:</span>
                 <span>{(result.accuracy * 100).toFixed(2)}%</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-medium">Process Time:</span>
+                <span>Process Time:</span>
                 <span>{result.process_time}</span>
               </div>
             </div>
-          </div>
+          </Alert>
         )}
 
-        <div className="mt-8 text-center">
-          <Link
-            to="/history"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
+      <div className="mt-6 text-center">
+        <Link to="/history">
+          <Button variant="secondary">
             View History
-          </Link>
-        </div>
+          </Button>
+        </Link>
       </div>
-    </div>
+    </Card>
   );
 };
 
