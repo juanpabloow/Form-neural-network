@@ -4,7 +4,6 @@ interface ButtonProps {
   children: React.ReactNode;
   variant?: 'primary' | 'secondary';
   disabled?: boolean;
-  loading?: boolean;
   type?: 'button' | 'submit';
   className?: string;
 }
@@ -13,7 +12,6 @@ const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
   disabled = false,
-  loading = false,
   type = 'button',
   className = '',
 }) => {
@@ -24,15 +22,13 @@ const Button: React.FC<ButtonProps> = ({
     secondary: 'border border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
   };
 
-  const isDisabled = disabled || loading;
-
   return (
     <button
       type={type}
-      disabled={isDisabled}
+      disabled={disabled}
       className={`${baseClasses} ${variantClasses[variant]} ${className}`}
     >
-      {loading ? 'Loading...' : children}
+      {children}
     </button>
   );
 };

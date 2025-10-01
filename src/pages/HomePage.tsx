@@ -78,7 +78,7 @@ const HomePage: React.FC = () => {
     <Card>
       <div className="text-center mb-6">
         <h1 className="text-2xl font-bold">Final Project</h1>
-        <p className="text-gray-600 mt-2">Upload a 28x28 pixel image of a handwritten digit</p>
+        <p className="text-sm">Upload a 28x28 pixel image of a handwritten digit</p>
       </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
               className="mr-2"
             />
             <label className="text-sm">
-              Image has black background (invert colors)
+              Black background?
             </label>
           </div>
 
@@ -118,21 +118,20 @@ const HomePage: React.FC = () => {
             disabled={!selectedFile}
             className="w-full"
           >
-            Predict Digit
+            Submit image
           </Button>
         </form>
 
         {result && (
           <Alert variant="success" className="mt-6">
-            <h3 className="font-semibold mb-3">Prediction Result</h3>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span>Predicted Digit:</span>
-                <span className="text-xl font-bold text-green-600">{result.prediction}</span>
+                <span>{result.prediction}</span>
               </div>
               <div className="flex justify-between">
                 <span>Accuracy:</span>
-                <span>{(result.accuracy * 100).toFixed(2)}%</span>
+                <span>{(result.accuracy).toFixed(2)}%</span>
               </div>
               <div className="flex justify-between">
                 <span>Process Time:</span>

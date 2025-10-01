@@ -44,11 +44,7 @@ const HistoryPage: React.FC = () => {
                 {history.map((item) => (
                   <tr key={item.id} className="border-b">
                     <td className="px-4 py-2">{item.timestamp}</td>
-                    <td className="px-4 py-2">
-                      <span className="text-xl font-bold text-blue-600">
-                        {item.prediction}
-                      </span>
-                    </td>
+                    <td className="px-4 py-2">{item.prediction}</td>
                     <td className="px-4 py-2">{(item.accuracy * 100).toFixed(2)}%</td>
                     <td className="px-4 py-2">{item.process_time}</td>
                   </tr>
